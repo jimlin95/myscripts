@@ -2,7 +2,6 @@
 #
 # Program:
 #       Full and incremental backup script
-# Based on a script by Gerhard Mourani <gmourani@videotron.ca>
 #
 #	Usage: ./clover_svn_weekly_backup.sh
 #       
@@ -20,10 +19,11 @@ NULL_DEV=/dev/null
 # Local definitions
 #-----------------------------------------------------------------------------------------------------
 backup_from="quanta@10.241.121.21:svn_backups/svn_weekly_backup.tar"
+source_from="/home/quanta/svn_backups/svn_weekly_backup.tar"
 backup_to="/home/jim/mnt/server_backup/svn_clover"
 PATH=/usr/local/bin:/usr/bin:/bin
 logfile="/home/jim/mnt/server_backup/svn_clover/log/clover_svn_weekly_backup.log"
-
+REMOTE="ssh quanta@10.241.121.21"
 #-----------------------------------------------------------------------------------------------------
 # Using commands list
 #-----------------------------------------------------------------------------------------------------
@@ -54,8 +54,16 @@ echo -e "\nBackup job started at $datetime" 2>&1 | tee -a $logfile
 #-----------------------------------------------------------------------------------------------------
 # Weekly full backup always keep it on server
 WOY=`date +%U`    # Update full backup date
+MD5_SRC=`$REMOTE md5sum $source_from | awk '{print $1}'`
 scp $backup_from $backup_to/svn_w${WOY}_backup.tar    
 echo "scp $backup_from $backup_to/svn_w${WOY}_backup.tar" | tee -a $logfile
+MD5_DES=`md5sum $backup_to/svn_w${WOY}_backup.tar | awk '{print $1}'`
+if [ "$MD5_SRC" != "$MD5_DES" ]; then
+#	$REMOTE rm $source_from 2>&1 | tee -a $logfile
+#else 
+	echo "$source_from MD5 checksum error" | tee -a $logfile
+fi
+
 #-----------------------------------------------------------------------------------------------------
 datetime=`date "+%Y-%m-%d %H:%M:%S"`
 echo "Backup job ended at $datetime"  2>&1 | tee -a $logfile
