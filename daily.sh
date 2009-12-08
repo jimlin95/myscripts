@@ -1,3 +1,3 @@
 #!/bin/bash
-ssh daily@Dandelion
+ssh -X daily@Dandelion
 exit 0

@@ -1,3 +1,3 @@
 #!/bin/bash
-ssh jimlin@Dandelion
+ssh -X jimlin@Dandelion
 exit 0
