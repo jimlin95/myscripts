@@ -56,11 +56,13 @@ echo -e "\nBackup job started at $datetime" 2>&1 | tee -a $logfile
 WOY=`date +%U`    # Update full backup date
 MD5_SRC=`$REMOTE md5sum $source_from | awk '{print $1}'`
 scp $backup_from $backup_to/svn_w${WOY}_backup.tar    
-echo "scp $backup_from $backup_to/svn_w${WOY}_backup.tar" | tee -a $logfile
+if [ $? -eq 0 ]; then
+	echo "scp $backup_from $backup_to/svn_w${WOY}_backup.tar" | tee -a $logfile
+else
+	echo "Error !!!! scp $backup_from $backup_to/svn_w${WOY}_backup.tar" | tee -a $logfile
+fi
 MD5_DES=`md5sum $backup_to/svn_w${WOY}_backup.tar | awk '{print $1}'`
 if [ "$MD5_SRC" != "$MD5_DES" ]; then
-#	$REMOTE rm $source_from 2>&1 | tee -a $logfile
-#else 
 	echo "$source_from MD5 checksum error" | tee -a $logfile
 fi
 
