@@ -19,7 +19,6 @@ NULL_DEV=/dev/null
 #-----------------------------------------------------------------------------------------------------
 backup_to="/home/jim/mnt/server_backup/Dandelion_Backups"
 source_from="/home/jimlin/Dandelion_Backups"
-password="123456"
 logfile="$backup_to/log/sync.log"
 REMOTE="ssh jimlin@Dandelion"
 #-----------------------------------------------------------------------------------------------------
