@@ -23,7 +23,6 @@ rnd=$RANDOM
 date=`date +%y%m%d`
 backup_to="/home/jimlin/Dandelion_Backups"
 logfile="/home/jimlin/Dandelion_Backups/log/backup_log"
-su_password="jimlin"
 COMPUTER="Dandelion"
 TIMEDIR="/home/jimlin/Dandelion_Backups/last-full"
 PATH=/usr/local/bin:/usr/bin:/bin
@@ -80,9 +79,9 @@ echo -e "\nBackup job started at $datetime" 2>&1 | tee -a $logfile
 
 
 # Get date of last full backup
-NEWER="--newer `cat $TIMEDIR/$COMPUTER-full-date`"
+NEWER="--newer-mtime `cat $TIMEDIR/$COMPUTER-full-date`"
 FILE_NAME=$COMPUTER-$DOW
-echo $su_password | $SUDO -S $TAR $NEWER -cpf $backup_to/$COMPUTER-$DOW.tar / --totals --absolute-names \
+$TAR $NEWER -cpf $backup_to/$COMPUTER-$DOW.tar / --totals --absolute-names \
     --ignore-failed-read --exclude-from=/tmp/$rnd-exclude-file-list 2>&1 | tee -a $logfile
 
 
@@ -91,17 +90,17 @@ if [ "${?}" != 0 ] ; then
     echo "Backup failed."  2>&1 | tee -a $logfile
 fi
 
-echo $su_password | $SUDO -S $GZIP -f --best --rsyncable $backup_to/$FILE_NAME.tar 2>&1 | tee -a $logfile
+$GZIP -f --best --rsyncable $backup_to/$FILE_NAME.tar 2>&1 | tee -a $logfile
 if [ "${?}" != 0 ] ; then
     echo "Gzip failed." 2>&1 | tee -a $logfile
 fi
 
-echo $su_password | $SUDO -S $GZIP --test $backup_to/$FILE_NAME.tar.gz 2>&1 | tee -a $logfile
+$GZIP --test $backup_to/$FILE_NAME.tar.gz 2>&1 | tee -a $logfile
 if [ "${?}" != 0 ] ; then
     echo "Check the compressed file integrity failed." 2>&1 | tee -a $logfile
 fi
 
-echo $su_password | $SUDO -S chmod a+x $backup_to/$FILE_NAME.tar.gz
+chmod a+x $backup_to/$FILE_NAME.tar.gz
 ls -alh $backup_to/$FILE_NAME.tar.gz 2>&1 | tee -a $logfile
 #-----------------------------------------------------------------------------------------------------
 rm -f /tmp/$rnd-exclude-file-list
