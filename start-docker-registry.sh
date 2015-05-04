@@ -1,2 +1,2 @@
 #!/bin/bash 
-sudo docker run -d -p 5000:5000 -v /home/jim/registry/registry-conf:/docker-registry registry
+docker run -d --restart=always -p 5000:5000 -v /home/jim/docker_data/registry:/tmp/registry registry:0.9.1
