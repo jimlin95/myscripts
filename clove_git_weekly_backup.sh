@@ -3,10 +3,10 @@
 # Program:
 #       Full and incremental backup script
 #
-#	Usage: ./clover_svn_weekly_backup.sh
+#	Usage: ./clover_git_weekly_backup.sh
 #       
 # History:
-# 2009/12/07	Jim Lin,	First release
+# 2010/04/14	Jim Lin,	First release
 #-----------------------------------------------------------------------------------------------------
 # Definition values
 #-----------------------------------------------------------------------------------------------------
@@ -18,12 +18,14 @@ NULL_DEV=/dev/null
 #-----------------------------------------------------------------------------------------------------
 # Local definitions
 #-----------------------------------------------------------------------------------------------------
-id_file="-i /root/.ssh/id_rsa_clover"
-backup_from="quanta@10.241.121.21:svn_backups/svn_weekly_backup.tar"
-source_from="/home/quanta/svn_backups/svn_weekly_backup.tar"
-backup_to="/media/server_backup/svn_clover"
+backup_from="quanta@10.241.121.21:git_backups/git_weekly_backup.7z"
+source_from="/home/quanta/git_backups/git_weekly_backup.7z"
+#backup_to="/media/server_backup/git_clover"
+server_backup=/media/server_backup
+backup_to="$server_backup/git_clover"
 PATH=/usr/local/bin:/usr/bin:/bin
-logfile="/media/server_backup/svn_clover/log/clover_svn_weekly_backup.log"
+logfile="$server_backup/git_clover/log/clover_git_weekly_backup.log"
+id_file="-i /root/.ssh/id_rsa_clover"
 REMOTE="ssh $id_file quanta@10.241.121.21"
 #-----------------------------------------------------------------------------------------------------
 # Using commands list
@@ -56,13 +58,13 @@ echo -e "\nBackup job started at $datetime" 2>&1 | tee -a $logfile
 # Weekly full backup always keep it on server
 WOY=`date +%U`    # Update full backup date
 MD5_SRC=`$REMOTE md5sum $source_from | awk '{print $1}'`
-scp $id_file $backup_from $backup_to/svn_w${WOY}_backup.tar    
+scp $id_file $backup_from $backup_to/git_w${WOY}_backup.7z    
 if [ $? -eq 0 ]; then
-	echo "scp $backup_from $backup_to/svn_w${WOY}_backup.tar" | tee -a $logfile
+	echo "scp $id_file $backup_from $backup_to/git_w${WOY}_backup.7z" | tee -a $logfile
 else
-	echo "Error !!!! scp $backup_from $backup_to/svn_w${WOY}_backup.tar" | tee -a $logfile
+	echo "Error !!!! scp $backup_from $backup_to/git_w${WOY}_backup.7z" | tee -a $logfile
 fi
-MD5_DES=`md5sum $backup_to/svn_w${WOY}_backup.tar | awk '{print $1}'`
+MD5_DES=`md5sum $backup_to/git_w${WOY}_backup.tar | awk '{print $1}'`
 if [ "$MD5_SRC" != "$MD5_DES" ]; then
 	echo "$source_from MD5 checksum error" | tee -a $logfile
 fi

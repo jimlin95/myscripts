@@ -17,7 +17,7 @@ NULL_DEV=/dev/null
 #-----------------------------------------------------------------------------------------------------
 # Local definitions
 #-----------------------------------------------------------------------------------------------------
-backup_to="/home/jim/mnt/server_backup/Dandelion_Backups"
+backup_to="/media/server_backup/Dandelion_Backups"
 source_from="/home/jimlin/Dandelion_Backups"
 logfile="$backup_to/log/sync.log"
 REMOTE="ssh jimlin@Dandelion"
