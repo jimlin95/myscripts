@@ -91,10 +91,10 @@ CHOICE()
    0)
 	echo "Flash All images with oem format "
 	adb reboot-bootloader
-	#fastboot flash partition $GPT
+	fastboot flash partition $GPT
 	fastboot flash modem $NON_HLOS
-	#fastboot flash sbl1 $SBL1
-	#fastboot flash sbl1bak $SBL1
+	fastboot flash sbl1 $SBL1
+	fastboot flash sbl1bak $SBL1
 	fastboot flash sdi $SDI
 	fastboot flash aboot $APPBOOT
 	fastboot flash abootbak $APPBOOT
@@ -104,7 +104,7 @@ CHOICE()
 	fastboot flash tz $TZ 
 	fastboot flash tzbak $TZ
 	fastboot flash system $SYSTEM
-	#fastboot flash persist $PERSIST
+	fastboot flash persist $PERSIST
 	fastboot flash recovery $RECOVERY
 	fastboot flash cache $CACHE
 	fastboot flash userdata $USERDATA
